@@ -1,0 +1,21 @@
+# Operating System
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# Build
+dist/
+
+# TypeScript
+tsbuild/
+tsconfig.tsbuildinfo
+
+# Nx
+.nx/
+
+# Alchemy
+.alchemy/
+
+# Agents
+.claude/

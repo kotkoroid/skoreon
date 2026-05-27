@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "erasableSyntaxOnly": true,
+    "esModuleInterop": true,
+    "exactOptionalPropertyTypes": true,
+    "isolatedModules": true,
+    "lib": ["esnext"],
+    "module": "preserve",
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "verbatimModuleSyntax": true
+  }
+}
