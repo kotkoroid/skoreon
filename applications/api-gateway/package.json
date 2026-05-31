@@ -1,0 +1,9 @@
+{
+  "name": "@skoreon/api-gateway",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "alchemy": "2.0.0-beta.36",
+    "effect": "4.0.0-beta.63"
+  }
+}
