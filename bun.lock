@@ -19,8 +19,8 @@
         "vite-plus": "0.1.22",
       },
     },
-    "applications/api-gateway": {
-      "name": "@skoreon/api-gateway",
+    "orchestrators/api-gateway": {
+      "name": "@skoreon/api-gateway-orchestrator",
       "version": "0.0.0",
       "dependencies": {
         "alchemy": "2.0.0-beta.36",
@@ -635,7 +635,7 @@
 
     "@simple-libs/stream-utils": ["@simple-libs/stream-utils@1.2.0", "", {}, "sha512-KxXvfapcixpz6rVEB6HPjOUZT22yN6v0vI0urQSk1L8MlEWPDFCZkhw2xmkyoTGYeFw7tWTZd7e3lVzRZRN/EA=="],
 
-    "@skoreon/api-gateway": ["@skoreon/api-gateway@workspace:applications/api-gateway"],
+    "@skoreon/api-gateway-orchestrator": ["@skoreon/api-gateway-orchestrator@workspace:orchestrators/api-gateway"],
 
     "@smithy/config-resolver": ["@smithy/config-resolver@4.4.17", "", { "dependencies": { "@smithy/node-config-provider": "^4.3.14", "@smithy/types": "^4.14.1", "@smithy/util-config-provider": "^4.2.2", "@smithy/util-endpoints": "^3.4.2", "@smithy/util-middleware": "^4.2.14", "tslib": "^2.6.2" } }, "sha512-TzDZcAnhTyAHbXVxWZo7/tEcrIeFq20IBk8So3OLOetWpR8EwY/yEqBMBFaJMeyEiREDq4NfEl+qO3OAUD+vbQ=="],
 

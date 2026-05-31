@@ -1,4 +1,4 @@
-import Api from '@skoreon/api-gateway/src/api/Api';
+import Api from '@skoreon/api-gateway-orchestrator/src/api/Api';
 import * as Cloudflare from 'alchemy/Cloudflare';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
