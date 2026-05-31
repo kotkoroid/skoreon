@@ -14,7 +14,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "paths": {
-      "@skoreon/api-gateway/*": ["./applications/api-gateway/*"]
+      "@skoreon/api-gateway-orchestrator/*": ["./orchestrators/api-gateway/*"]
     },
     "resolveJsonModule": true,
     "resolvePackageJsonExports": true,
