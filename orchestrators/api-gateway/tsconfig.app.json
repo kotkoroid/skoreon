@@ -1,7 +1,14 @@
 {
   "extends": "../../tsconfig.base.json",
   "include": ["src/**/*.ts"],
-  "references": [],
+  "references": [
+    {
+      "path": "../../services/catalog/tsconfig.app.json"
+    },
+    {
+      "path": "../../libraries/domain/api-gateway-contract/tsconfig.lib.json"
+    }
+  ],
   "compilerOptions": {
     "outDir": "./tsbuild",
     "types": ["bun"]
