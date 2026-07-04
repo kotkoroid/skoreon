@@ -4,6 +4,15 @@
   "references": [
     {
       "path": "./orchestrators/api-gateway"
+    },
+    {
+      "path": "./services/catalog"
+    },
+    {
+      "path": "./services/match"
+    },
+    {
+      "path": "./libraries/domain/api-gateway-contract"
     }
   ]
 }
