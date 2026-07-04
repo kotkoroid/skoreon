@@ -13,14 +13,13 @@
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
-    "paths": {
-      "@skoreon/api-gateway-orchestrator/*": ["./orchestrators/api-gateway/*"]
-    },
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "resolvePackageJsonExports": true,
     "resolvePackageJsonImports": true,
     "skipLibCheck": true,
     "strict": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "noUncheckedSideEffectImports": false
   }
 }
