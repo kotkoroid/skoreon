@@ -1,4 +1,4 @@
-import { FifaCountry, PlayerPosition, Sex, TeamKind } from '#schema/Enums';
+import { AssociationKind, FifaCountry, PlayerPosition, Sex, TeamKind } from '#schema/Enums';
 import * as Schema from 'effect/Schema';
 import { Rpc, RpcGroup } from 'effect/unstable/rpc';
 
@@ -58,4 +58,68 @@ const getTeam = Rpc.make('getTeam', {
   success: Schema.NullOr(Team),
 });
 
-export class ServiceRpcs extends RpcGroup.make(greet, listPlayers, listTeams, getTeam) {}
+export const Association = Schema.Struct({
+  id: Schema.String,
+  name: Schema.String,
+  code: Schema.String,
+  kind: AssociationKind,
+  governingAssociationId: Schema.NullOr(Schema.String),
+});
+
+const listAssociations = Rpc.make('listAssociations', {
+  payload: { kind: Schema.optional(AssociationKind) },
+  success: Schema.Array(Association),
+});
+
+export const Competition = Schema.Struct({
+  id: Schema.String,
+  name: Schema.String,
+  code: Schema.String,
+  teamKind: TeamKind,
+  associationId: Schema.String,
+});
+
+const listCompetitions = Rpc.make('listCompetitions', {
+  payload: { teamKind: Schema.optional(TeamKind) },
+  success: Schema.Array(Competition),
+});
+
+export const Edition = Schema.Struct({
+  id: Schema.String,
+  competitionId: Schema.String,
+  startsOn: Schema.String,
+  endsOn: Schema.String,
+});
+
+const listEditions = Rpc.make('listEditions', {
+  payload: { competitionId: Schema.optional(Schema.String) },
+  success: Schema.Array(Edition),
+});
+
+export const Participation = Schema.Struct({
+  id: Schema.String,
+  editionId: Schema.String,
+  teamId: Schema.String,
+});
+
+const listParticipations = Rpc.make('listParticipations', {
+  payload: {
+    editionId: Schema.optional(Schema.String),
+    teamId: Schema.optional(Schema.String),
+  },
+  success: Schema.Array(Participation),
+});
+
+const seed = Rpc.make('seed', { success: Schema.Void });
+
+export class ServiceRpcs extends RpcGroup.make(
+  greet,
+  listPlayers,
+  listTeams,
+  getTeam,
+  listAssociations,
+  listCompetitions,
+  listEditions,
+  listParticipations,
+  seed,
+) {}

@@ -1,7 +1,8 @@
 import { CatalogDatabase } from '#Database';
 import { ServiceRpcs } from '#rpcs';
-import { relations } from '#schema/Relations';
 import { players } from '#schema/Players';
+import { relations } from '#schema/Relations';
+import { seedCatalog } from '#seed/Run';
 import * as Cloudflare from 'alchemy/Cloudflare';
 import { isNull, sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
@@ -16,11 +17,6 @@ export default class CatalogService extends Cloudflare.RpcWorker<CatalogService>
     const database = yield* Cloudflare.D1Database('CatalogD1Database', {
       migrationsDir: './services/catalog/migrations',
       migrationsTable: 'drizzle_migrations',
-      importFiles: [
-        './services/catalog/seed/reference.sql',
-        './services/catalog/seed/teams.sql',
-        './services/catalog/seed/players.sql',
-      ],
     });
     const connection = yield* Cloudflare.D1Connection.bind(database);
     const db = drizzle(yield* connection.raw, { relations });
@@ -98,6 +94,44 @@ export default class CatalogService extends Cloudflare.RpcWorker<CatalogService>
           });
           return team ?? null;
         }),
+      listAssociations: ({ kind }) =>
+        Effect.promise(() =>
+          db.query.associations.findMany({
+            where: {
+              deletedAt: { isNull: true },
+              ...(kind !== undefined ? { kind } : {}),
+            },
+          }),
+        ),
+      listCompetitions: ({ teamKind }) =>
+        Effect.promise(() =>
+          db.query.competitions.findMany({
+            where: {
+              deletedAt: { isNull: true },
+              ...(teamKind !== undefined ? { teamKind } : {}),
+            },
+          }),
+        ),
+      listEditions: ({ competitionId }) =>
+        Effect.promise(() =>
+          db.query.editions.findMany({
+            where: {
+              deletedAt: { isNull: true },
+              ...(competitionId !== undefined ? { competitionId } : {}),
+            },
+          }),
+        ),
+      listParticipations: ({ editionId, teamId }) =>
+        Effect.promise(() =>
+          db.query.participations.findMany({
+            where: {
+              deletedAt: { isNull: true },
+              ...(editionId !== undefined ? { editionId } : {}),
+              ...(teamId !== undefined ? { teamId } : {}),
+            },
+          }),
+        ),
+      seed: () => seedCatalog(db),
     });
     // NDJSON, not JSON: `Cloudflare.RpcWorker.bind`'s client uses
     // `RpcSerialization.layerNdjson`, so the server must match it.

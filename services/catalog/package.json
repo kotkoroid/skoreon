@@ -6,6 +6,9 @@
   "imports": {
     "#*": "./src/*.ts"
   },
+  "scripts": {
+    "seed": "bun src/seed/Cli.ts"
+  },
   "dependencies": {
     "alchemy": "2.0.0-beta.58",
     "drizzle-orm": "1.0.0-rc.4",
