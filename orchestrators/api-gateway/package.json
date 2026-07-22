@@ -9,6 +9,7 @@
   "dependencies": {
     "@skoreon/api-gateway-contract": "workspace:*",
     "@skoreon/catalog-service": "workspace:*",
+    "@skoreon/match-service": "workspace:*",
     "alchemy": "2.0.0-beta.58",
     "effect": "4.0.0-beta.90"
   }

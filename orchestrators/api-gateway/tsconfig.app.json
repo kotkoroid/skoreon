@@ -6,6 +6,9 @@
       "path": "../../services/catalog/tsconfig.app.json"
     },
     {
+      "path": "../../services/match/tsconfig.app.json"
+    },
+    {
       "path": "../../libraries/domain/api-gateway-contract/tsconfig.lib.json"
     }
   ],
