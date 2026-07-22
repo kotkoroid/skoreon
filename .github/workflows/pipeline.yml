@@ -1,0 +1,39 @@
+name: Pipeline
+
+# Continuous deployment: every commit that lands on `main` is verified, then
+# rolled through every stage in order. A stage that fails stops the pipeline,
+# leaving the stages beyond it on the last good commit.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    uses: ./.github/workflows/verify.yml
+
+  development:
+    needs: verify
+    uses: ./.github/workflows/deployment.yml
+    with:
+      stage: development
+      ref: ${{ github.sha }}
+    secrets: inherit
+
+  staging:
+    needs: development
+    uses: ./.github/workflows/deployment.yml
+    with:
+      stage: staging
+      ref: ${{ github.sha }}
+    secrets: inherit
+
+  production:
+    needs: staging
+    uses: ./.github/workflows/deployment.yml
+    with:
+      stage: production
+      ref: ${{ github.sha }}
+    secrets: inherit

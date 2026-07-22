@@ -1,0 +1,70 @@
+name: Deployment
+
+# Deploys the stack to exactly one stage. Called by `pipeline.yml` for each
+# stage in turn, or dispatched directly to redeploy or roll back a stage.
+on:
+  workflow_call:
+    inputs:
+      stage:
+        type: string
+        required: true
+      ref:
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Stage to deploy
+        type: choice
+        options: [development, staging, production]
+        required: true
+      ref:
+        description: Commit to deploy (must be on main)
+        type: string
+        required: true
+
+# One lane per stage: two deploys to the same stage would race on the state
+# store, which is keyed by (stack, stage). Never cancel a deploy in flight —
+# a half-applied stack is worse than a queued one.
+concurrency:
+  group: deployment-${{ inputs.stage }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to ${{ inputs.stage }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: ${{ inputs.stage }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      # Every deploy must trace back to a commit that passed the PR gate on
+      # `main` — not an arbitrary SHA someone pasted into the dispatch form.
+      - name: Verify commit is on main
+        env:
+          REF: ${{ inputs.ref }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor "$REF" origin/main \
+            || { echo "::error::$REF is not an ancestor of origin/main"; exit 1; }
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+
+      - run: bun install --frozen-lockfile
+
+      - name: Deploy stack
+        env:
+          STAGE: ${{ inputs.stage }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: bun alchemy deploy --stage "$STAGE" --yes
