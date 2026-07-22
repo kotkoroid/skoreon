@@ -1,6 +1,7 @@
 import { MatchDatabase } from '#Database';
 import { ServiceRpcs } from '#rpcs';
 import { relations } from '#schema/Relations';
+import { seedMatches } from '#seed/Run';
 import * as Cloudflare from 'alchemy/Cloudflare';
 import { drizzle } from 'drizzle-orm/d1';
 import * as Effect from 'effect/Effect';
@@ -20,6 +21,31 @@ export default class MatchService extends Cloudflare.RpcWorker<MatchService>()(
 
     const handlers = ServiceRpcs.toLayer({
       greet: ({ name }) => Effect.succeed(`Hello ${name}`),
+      seed: () => seedMatches(db),
+      listMatches: ({ editionId, roundId }) =>
+        Effect.promise(async () => {
+          const rows = await db.query.matches.findMany({
+            where: {
+              deletedAt: { isNull: true },
+              ...(editionId !== undefined ? { editionId } : {}),
+              ...(roundId !== undefined ? { roundId } : {}),
+            },
+            orderBy: { kickoffAt: 'asc' },
+          });
+          return rows.map((match) => ({
+            id: match.id,
+            editionId: match.editionId,
+            roundId: match.roundId,
+            groupId: match.groupId,
+            homeParticipationId: match.homeParticipationId,
+            awayParticipationId: match.awayParticipationId,
+            status: match.status,
+            kickoffAt: match.kickoffAt.toISOString(),
+            timezone: match.timezone,
+            homeScore: match.homeScore,
+            awayScore: match.awayScore,
+          }));
+        }),
     });
     // NDJSON, not JSON: `Cloudflare.RpcWorker.bind`'s client uses
     // `RpcSerialization.layerNdjson`, so the server must match it.
