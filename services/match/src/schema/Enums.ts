@@ -31,6 +31,7 @@ export const OfficialRole = Schema.Literals([
   'ASSISTANT_REFEREE',
   'FOURTH_OFFICIAL',
   'VIDEO_ASSISTANT_REFEREE',
+  'DELEGATE',
 ]);
 export type OfficialRole = typeof OfficialRole.Type;
 
