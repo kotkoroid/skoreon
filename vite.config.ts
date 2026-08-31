@@ -6,6 +6,12 @@ export default defineConfig({
     semi: true,
     singleQuote: true,
   },
+  lint: {
+    options: {
+      typeAware: true,
+      typeCheck: true,
+    },
+  },
   staged: {
     '*': 'vp check --fix',
   },

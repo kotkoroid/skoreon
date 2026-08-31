@@ -13,16 +13,15 @@ export default class CatalogService extends Cloudflare.RpcWorker<CatalogService>
   'CatalogServiceRpcWorker',
   { main: import.meta.url, schema: ServiceRpcs },
   Effect.gen(function* () {
-    const database = yield* Cloudflare.D1Database('CatalogD1Database', {
-      migrationsDir: './services/catalog/migrations',
-      migrationsTable: 'drizzle_migrations',
+    const database = yield* Cloudflare.D1.Database('CatalogD1Database', {
+      migrations: { dir: './services/catalog/migrations', table: 'drizzle_migrations' },
       importFiles: [
         './services/catalog/seed/reference.sql',
         './services/catalog/seed/teams.sql',
         './services/catalog/seed/players.sql',
       ],
     });
-    const connection = yield* Cloudflare.D1Connection.bind(database);
+    const connection = yield* Cloudflare.D1.QueryDatabase(database);
     const db = drizzle(yield* connection.raw, { relations });
 
     const handlers = ServiceRpcs.toLayer({
@@ -106,5 +105,5 @@ export default class CatalogService extends Cloudflare.RpcWorker<CatalogService>
         Layer.mergeAll(handlers, RpcSerialization.layerNdjson, Layer.succeed(CatalogDatabase, db)),
       ),
     );
-  }).pipe(Effect.provide(Cloudflare.D1ConnectionLive)),
+  }).pipe(Effect.provide(Cloudflare.D1.QueryDatabaseBinding)),
 ) {}

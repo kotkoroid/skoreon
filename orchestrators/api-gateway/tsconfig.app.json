@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "../../types/workerd-import-meta.d.ts"],
   "references": [
     {
       "path": "../../services/catalog/tsconfig.app.json"
@@ -11,6 +11,6 @@
   ],
   "compilerOptions": {
     "outDir": "./tsbuild",
-    "types": ["bun"]
+    "types": []
   }
 }

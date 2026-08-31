@@ -11,11 +11,10 @@ export default class MatchService extends Cloudflare.RpcWorker<MatchService>()(
   'MatchService',
   { main: import.meta.url, schema: ServiceRpcs },
   Effect.gen(function* () {
-    const database = yield* Cloudflare.D1Database('MatchD1Database', {
-      migrationsDir: './services/match/migrations',
-      migrationsTable: 'drizzle_migrations',
+    const database = yield* Cloudflare.D1.Database('MatchD1Database', {
+      migrations: { dir: './services/match/migrations', table: 'drizzle_migrations' },
     });
-    const connection = yield* Cloudflare.D1Connection.bind(database);
+    const connection = yield* Cloudflare.D1.QueryDatabase(database);
     const db = drizzle(yield* connection.raw, { relations });
 
     const handlers = ServiceRpcs.toLayer({
@@ -28,5 +27,5 @@ export default class MatchService extends Cloudflare.RpcWorker<MatchService>()(
         Layer.mergeAll(handlers, RpcSerialization.layerNdjson, Layer.succeed(MatchDatabase, db)),
       ),
     );
-  }).pipe(Effect.provide(Cloudflare.D1ConnectionLive)),
+  }).pipe(Effect.provide(Cloudflare.D1.QueryDatabaseBinding)),
 ) {}

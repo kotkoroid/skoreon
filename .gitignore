@@ -12,9 +12,6 @@ dist/
 tsbuild/
 tsconfig.tsbuildinfo
 
-# Nx
-.nx/
-
 # Alchemy
 .alchemy/
 
