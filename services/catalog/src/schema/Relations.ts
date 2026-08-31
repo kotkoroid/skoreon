@@ -1,5 +1,5 @@
 import { associations } from '#schema/Associations';
-import { competitionRules } from '#schema/CompetitionRules';
+import { editionRules } from '#schema/EditionRules';
 import { competitions } from '#schema/Competitions';
 import { editions } from '#schema/Editions';
 import { groupAssignments } from '#schema/GroupAssignments';
@@ -11,7 +11,7 @@ import { players } from '#schema/Players';
 import { registrations } from '#schema/Registrations';
 import { rounds } from '#schema/Rounds';
 import { teams } from '#schema/Teams';
-import { tiebreakerCriteria } from '#schema/TiebreakerCriteria';
+import { editionTiebreakers } from '#schema/EditionTiebreakers';
 import { defineRelations } from 'drizzle-orm';
 
 export const schema = {
@@ -27,8 +27,8 @@ export const schema = {
   persons,
   players,
   registrations,
-  competitionRules,
-  tiebreakerCriteria,
+  editionRules,
+  editionTiebreakers,
 };
 
 export const relations = defineRelations(schema, (r) => ({
@@ -53,11 +53,6 @@ export const relations = defineRelations(schema, (r) => ({
       optional: false,
     }),
     editions: r.many.editions(),
-    rules: r.one.competitionRules({
-      from: r.competitions.id,
-      to: r.competitionRules.competitionId,
-    }),
-    tiebreakerCriteria: r.many.tiebreakerCriteria(),
   },
   editions: {
     competition: r.one.competitions({
@@ -67,6 +62,11 @@ export const relations = defineRelations(schema, (r) => ({
     }),
     phases: r.many.phases(),
     participations: r.many.participations(),
+    rules: r.one.editionRules({
+      from: r.editions.id,
+      to: r.editionRules.editionId,
+    }),
+    tiebreakers: r.many.editionTiebreakers(),
   },
   phases: {
     edition: r.one.editions({
@@ -141,17 +141,17 @@ export const relations = defineRelations(schema, (r) => ({
       optional: false,
     }),
   },
-  competitionRules: {
-    competition: r.one.competitions({
-      from: r.competitionRules.competitionId,
-      to: r.competitions.id,
+  editionRules: {
+    edition: r.one.editions({
+      from: r.editionRules.editionId,
+      to: r.editions.id,
       optional: false,
     }),
   },
-  tiebreakerCriteria: {
-    competition: r.one.competitions({
-      from: r.tiebreakerCriteria.competitionId,
-      to: r.competitions.id,
+  editionTiebreakers: {
+    edition: r.one.editions({
+      from: r.editionTiebreakers.editionId,
+      to: r.editions.id,
       optional: false,
     }),
   },

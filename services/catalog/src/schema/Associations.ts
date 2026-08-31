@@ -8,6 +8,7 @@ export const associations = sqliteTable(
   {
     ...base(),
     name: text('name').notNull(),
+    abbreviation: text('abbreviation').notNull(),
     code: text('code', { enum: AssociationCode.literals }).notNull(),
     kind: text('kind', { enum: AssociationKind.literals }).notNull(),
     governingAssociationId: text('governing_association_id').references(

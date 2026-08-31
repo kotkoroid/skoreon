@@ -1,0 +1,1 @@
+ALTER TABLE `associations` ADD `abbreviation` text NOT NULL;
